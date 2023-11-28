@@ -33,4 +33,12 @@ public class Examination {
                 this.configuration + ", " +
                 this.date.toString();
     }
+
+    public ExaminationType getExaminationType(){
+        return this.examinationType;
+    }
+
+    public String getResult(){
+        return this.result;
+    }
 }

@@ -35,4 +35,16 @@ public class Patient {
         return this.imageURL;
     }
 
+    public String getName(){
+        return this.name;
+    }
+
+    public int getAge(){
+        return this.age;
+    }
+
+    public ArrayList<Examination> getExaminationList(){
+        return this.examinationList;
+    }
+
 }

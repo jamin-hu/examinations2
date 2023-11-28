@@ -95,7 +95,44 @@ public class AdminView {
             f.add(profilePic);
 
 
+            JLabel profileText = new JLabel("My Text");
+            profileText.setText("<html>Name:" +
+                    patient.getName() +
+                    "<br>Age:" +
+                    patient.getAge() +
+                    "</html>"
+                    );
+
+            f.add(profileText);
+
+
             //
+
+            for (Examination examination:patient.getExaminationList()){
+                if (examination.getExaminationType() == Examination.ExaminationType.MRI){
+                    JLabel MRIView = new JLabel();
+                    URL mriURL = null;
+                    try {
+                        mriURL = new URL(examination.getResult());
+                    } catch (MalformedURLException e){
+                        System.out.println(e.getMessage());
+                    }
+                    MRIView.setIcon(new ImageIcon(mriURL));
+
+                    f.add(MRIView);
+                } else if (examination.getExaminationType() == Examination.ExaminationType.BP){
+                    JLabel bpText = new JLabel("My Text");
+                    String highNumber = "0";
+                    bpText.setText("<html>Blood Pressure " +
+                            getHighFromBPResult(examination.getResult())
+                    );
+
+                    f.add(bpText);
+
+                }
+            }
+
+
         }
 
 
@@ -112,4 +149,27 @@ public class AdminView {
     private static int getNumberOfPatients(){
         return PatientList.size();
     }
+
+
+
+    private static String getHighFromBPResult(String bpResultString){
+        int startInt = bpResultString.lastIndexOf("Systolic:");
+        System.out.println(startInt);
+        String subStringAfterSystolicKeyword = bpResultString.substring(startInt + 10);
+        int endInt = subStringAfterSystolicKeyword.indexOf(",");
+        System.out.println(endInt);
+        String highString = subStringAfterSystolicKeyword.substring(0,endInt);
+        return highString;
+    }
+
+    private static String getLowFromBPResult(String bpResultString){
+        int startInt = bpResultString.lastIndexOf("Diastolic:");
+        System.out.println(startInt);
+        String subStringAfterSystolicKeyword = bpResultString.substring(startInt + 10);
+        int endInt = subStringAfterSystolicKeyword.indexOf(",");
+        System.out.println(endInt);
+        String lowString = subStringAfterSystolicKeyword.substring(0,endInt);
+        return lowString;
+    }
+
 }
