@@ -1,6 +1,8 @@
 import Examinations.Examination;
 
-import java.sql.Array;
+import javax.swing.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Patient {
@@ -19,12 +21,18 @@ public class Patient {
     }
 
     public String getLogOutput(){
-        String OutputString = "Patient: " + name + ": ";
+        String PatientExaminationLogString = "";
+
+        String separatorString = ": ";
+
+        ArrayList<String> examinationLogList = new ArrayList<>();
         for (Examination examination:examinationList){
-            OutputString = OutputString + examination.getLogOutput();
-            OutputString = OutputString + ", ";
+            examinationLogList.add(examination.getLogString());
         }
-        return OutputString;
+        String examinationLogString = String.join(separatorString, examinationLogList);
+
+        PatientExaminationLogString = "Patient: " + name + ": " + examinationLogString;
+        return PatientExaminationLogString;
     }
 
     public void addExamination(Examination examination){
@@ -45,6 +53,47 @@ public class Patient {
 
     public ArrayList<Examination> getExaminationList(){
         return this.examinationList;
+    }
+
+    public JScrollPane getFullPatientViewable(){
+        JPanel patientPanel = new JPanel();
+        JScrollPane panelPane = new JScrollPane(patientPanel);
+
+
+        patientPanel.add(getPatientViewable());
+        for (Examination examination:examinationList){
+            patientPanel.add(examination.getViewable());
+        }
+
+        return panelPane;
+    }
+
+    private JPanel getPatientViewable(){
+        JPanel patientPanel = new JPanel();
+
+        // Make Profile Picture Label
+        JLabel profilePic = new JLabel();
+        URL imageURL = null;
+        try {
+            imageURL = new URL(this.getImageURL());
+        } catch (MalformedURLException e){
+            System.out.println(e.getMessage());
+        }
+        ImageIcon thisImageIcon = new ImageIcon(imageURL);
+        profilePic.setIcon(thisImageIcon);
+        patientPanel.add(profilePic);
+
+        // Make Profile Text Label
+        JLabel profileText = new JLabel("My Text");
+        profileText.setText("<html>Name: " +
+                this.getName() +
+                "<br>Age: " +
+                this.getAge() +
+                "</html>"
+        );
+        patientPanel.add(profileText);
+
+        return patientPanel;
     }
 
 }
